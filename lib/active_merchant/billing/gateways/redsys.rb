@@ -197,7 +197,7 @@ module ActiveMerchant #:nodoc:
         add_amount(data, money, options)
         add_order(data, options[:order_id])
         add_payment(data, payment)
-        add_threeds(data, options) if options[:execute_threed]
+        add_threeds(data, options)
         data[:description] = options[:description]
         data[:store_in_vault] = options[:store]
         data[:sca_exemption] = options[:sca_exemption]
@@ -213,7 +213,7 @@ module ActiveMerchant #:nodoc:
         add_amount(data, money, options)
         add_order(data, options[:order_id])
         add_payment(data, payment)
-        add_threeds(data, options) if options[:execute_threed]
+        add_threeds(data, options)
         data[:description] = options[:description]
         data[:store_in_vault] = options[:store]
         data[:sca_exemption] = options[:sca_exemption]
@@ -285,7 +285,7 @@ module ActiveMerchant #:nodoc:
       private
 
       def add_action(data, action, options = {})
-        data[:action] = options[:execute_threed].present? ? '0' : transaction_code(action)
+        data[:action] = transaction_code(action)
       end
 
       def add_amount(data, money, options)
@@ -322,7 +322,8 @@ module ActiveMerchant #:nodoc:
       end
 
       def add_threeds(data, options)
-        data[:threeds] = { threeDSInfo: 'CardData' } if options[:execute_threed] == true
+        options[:threeds] = { threeDSInfo: 'CardData' } if options[:execute_threed]
+        data[:threeds] = options[:threeds] if options[:threeds]
       end
 
       def determine_3ds_action(threeds_hash)
