@@ -205,6 +205,8 @@ module ActiveMerchant #:nodoc:
         add_threeds(data, options)
         data[:description] = options[:description]
         data[:store_in_vault] = options[:store]
+        data[:cof_type] = options[:cof_type] # used with MIT (I R H AND D M N C)
+        data[:reference_id] = options[:reference_id]
         data[:sca_exemption] = options[:sca_exemption]
 
         commit data, options
@@ -222,6 +224,8 @@ module ActiveMerchant #:nodoc:
         add_threeds(data, options)
         data[:description] = options[:description]
         data[:store_in_vault] = options[:store]
+        data[:cof_type] = options[:cof_type] # used with MIT (I R H AND D M N C)
+        data[:reference_id] = options[:reference_id]
         data[:sca_exemption] = options[:sca_exemption]
 
         commit data, options
@@ -479,6 +483,8 @@ module ActiveMerchant #:nodoc:
 
             build_merchant_mpi_external(xml, data)
 
+            xml.DS_MERCHANT_COF_TYPE   data[:cof_type] if data[:cof_type]
+            xml.DS_MERCHANT_COF_TXNID  data[:reference_id] if data[:reference_id]
           elsif data[:credit_card_token]
             xml.DS_MERCHANT_IDENTIFIER data[:credit_card_token]
             xml.DS_MERCHANT_DIRECTPAYMENT 'true'
