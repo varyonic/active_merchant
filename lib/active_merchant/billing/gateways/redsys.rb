@@ -375,13 +375,14 @@ module ActiveMerchant #:nodoc:
       end
 
       def determine_3ds_action(threeds_hash)
+        return 'trataPeticion' if threeds_hash.nil?
         return 'iniciaPeticion' if threeds_hash[:threeDSInfo] == 'CardData'
         return 'trataPeticion' if threeds_hash[:threeDSInfo] == 'AuthenticationData' ||
                                   threeds_hash[:threeDSInfo] == 'ChallengeResponse'
       end
 
       def commit(data, options = {})
-        if data[:threeds]
+        if data[:threeds] || data[:sca_exemption]
           action = determine_3ds_action(data[:threeds])
           request = <<-REQUEST
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://webservice.sis.sermepa.es" xmlns:intf="http://webservice.sis.sermepa.es" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
