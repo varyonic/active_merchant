@@ -319,7 +319,7 @@ module ActiveMerchant #:nodoc:
         if card.is_a?(String)
           data[:credit_card_token] = card
         else
-          name  = [card.first_name, card.last_name].join(' ').slice(0, 60)
+          name  = [card.first_name, card.last_name].join(' ').strip.slice(0, 60)
           year  = sprintf('%.4i', card.year)
           month = sprintf('%.2i', card.month)
           data[:card] = {
@@ -461,7 +461,7 @@ module ActiveMerchant #:nodoc:
           xml.DS_MERCHANT_TRANSACTIONTYPE    data[:action]
           if data[:description] && data[:threeds]
             xml.DS_MERCHANT_PRODUCTDESCRIPTION CGI.escape(data[:description])
-          else
+          elsif data[:description]
             xml.DS_MERCHANT_PRODUCTDESCRIPTION data[:description]
           end
           xml.DS_MERCHANT_TERMINAL           options[:terminal] || @options[:terminal]
@@ -471,9 +471,9 @@ module ActiveMerchant #:nodoc:
 
           # Only when card is present
           if data[:card]
-            if data[:card][:name] && data[:threeds]
+            if data[:card][:name].present? && data[:threeds]
               xml.DS_MERCHANT_TITULAR    CGI.escape(data[:card][:name])
-            else
+            elsif data[:card][:name].present?
               xml.DS_MERCHANT_TITULAR    data[:card][:name]
             end
             xml.DS_MERCHANT_PAN        data[:card][:pan]
