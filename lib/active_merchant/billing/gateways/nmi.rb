@@ -165,6 +165,8 @@ module ActiveMerchant #:nodoc:
           customer_vault_id, = split_authorization(payment_method)
           post[:customer_vault_id] = customer_vault_id
         elsif payment_method.is_a?(NetworkTokenizationCreditCard)
+          post[:firstname] = payment_method.first_name
+          post[:lastname] = payment_method.last_name
           post[:ccnumber] = payment_method.number
           post[:ccexp] = exp_date(payment_method)
           add_network_token_fields(post, payment_method)
