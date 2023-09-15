@@ -169,6 +169,9 @@ module ActiveMerchant #:nodoc:
           post[:ccnumber] = payment_method.number
           post[:ccexp] = exp_date(payment_method)
           post[:token_cryptogram] = payment_method.payment_cryptogram
+        elsif payment_method.is_a?(PaymentToken)
+          # https://secure.nmi.com/merchants/resources/integration/integration_portal.php#googlepay_variables
+          post[:googlepay_payment_data] = payment_method.payment_data
         elsif card_brand(payment_method) == 'check'
           post[:payment] = 'check'
           post[:firstname] = payment_method.first_name
